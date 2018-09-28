@@ -34,7 +34,7 @@ Resources:
     VPC:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/vpc.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/vpc.yaml
             Parameters:
                 EnvironmentName:    !Ref AWS::StackName
                 VpcCIDR:            10.20.0.0/16
@@ -46,7 +46,7 @@ Resources:
     SecurityGroups:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/security-groups.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/security-groups.yaml
             Parameters: 
                 EnvironmentName: !Ref AWS::StackName
                 VPC: !GetAtt VPC.Outputs.VPC
@@ -54,7 +54,7 @@ Resources:
     ALB:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/load-balancers.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/load-balancers.yaml
             Parameters:
                 EnvironmentName: !Ref AWS::StackName
                 VPC: !GetAtt VPC.Outputs.VPC
@@ -64,14 +64,14 @@ Resources:
     ECS:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/ecs-cluster.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/ecs-cluster.yaml
             Parameters:
                 EnvironmentName: !Ref AWS::StackName
 
     PrivateDnsNameSpace:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/service-discovery.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/infrastructure/service-discovery.yaml
             Parameters:
                 Name: corp
                 VPC: !GetAtt VPC.Outputs.VPC
@@ -79,7 +79,7 @@ Resources:
     BackendService:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/backend/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/backend/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
@@ -95,7 +95,7 @@ Resources:
     WorkerService:
         Type: AWS::CloudFormation::Stack
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
@@ -111,7 +111,7 @@ Resources:
         Type: AWS::CloudFormation::Stack
         Condition: AdditionalServices
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 3
@@ -127,7 +127,7 @@ Resources:
         Type: AWS::CloudFormation::Stack
         Condition: AdditionalServices
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 2
@@ -143,7 +143,7 @@ Resources:
         Type: AWS::CloudFormation::Stack
         Condition: AdditionalServices
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 3
@@ -159,7 +159,7 @@ Resources:
         Type: AWS::CloudFormation::Stack
         Condition: AdditionalServices
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 4
@@ -175,7 +175,7 @@ Resources:
         Type: AWS::CloudFormation::Stack
         Condition: AdditionalServices
         Properties:
-            TemplateURL: https://s3.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
+            TemplateURL: https://s3-eu-west-1.amazonaws.com/pjlewis-aws-ecs-service-discovery-demo/workers/service.yaml
             Parameters:
                 Cluster: !GetAtt ECS.Outputs.Cluster
                 DesiredCount: 3
