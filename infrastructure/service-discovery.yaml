@@ -1,0 +1,28 @@
+Description: >
+    This template creates a private namespace in Route 53 to be used by our various ECS services
+    to communicate with each other without the need for load balancers.
+
+Parameters:
+
+    Name:
+        Description: Please provide a name for the private namespace
+        Type: String
+        Default: corp
+
+    VPC:
+        Type: AWS::EC2::VPC::Id
+        Description: Choose which VPC the Application Load Balancer should be deployed to
+
+Resources:
+
+    PrivateDnsNamespace:
+        Type: "AWS::ServiceDiscovery::PrivateDnsNamespace"
+        Properties:
+            Name: !Ref Name
+            Vpc: !Ref VPC
+
+Outputs:
+
+    PrivateDnsNamespace:
+        Description: A reference to the private DNS namespace
+        Value: !Ref PrivateDnsNamespace

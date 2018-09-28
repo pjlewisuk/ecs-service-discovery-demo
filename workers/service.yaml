@@ -1,0 +1,103 @@
+Description: >
+    A sample Python service deployed and access via Service Discovery.
+
+Parameters: 
+
+    Cluster:
+        Description: Please provide the ECS Cluster ID that this service should run on
+        Type: String
+
+    DesiredCount: 
+        Description: How many instances of this task should we run across our cluster?
+        Type: Number
+        Default: 2
+
+    ExecutionRole:
+        Description: >
+            Please provide the Task Execution Role which will be used to pull container
+            images from Amazon ECR and to push logs into CloudWatch Logs
+        Type: String
+
+    PrivateDnsNamespace:
+        Description: Please provide the Private DNS namespace to use for service discovery
+        Type: String
+
+    SecurityGroups:
+        Description: Please provide a list of security groups for your tasks
+        Type: String
+
+    ServiceName:
+        Description: Please provide a name for the sample service
+        Type: String
+        Default: worker
+
+    Subnet1:
+        Description: Please provide the first subnet in which your tasks will run
+        Type: String
+
+    Subnet2:
+        Description: Please provide the second subnet in which your tasks will run
+        Type: String
+
+    VPC:
+        Description: The VPC that the ECS cluster is deployed to
+        Type: AWS::EC2::VPC::Id
+        
+Resources:
+
+    CloudWatchLogsGroup:
+        Type: AWS::Logs::LogGroup
+        Properties: 
+            LogGroupName: !Ref AWS::StackName
+            RetentionInDays: 365  
+
+    Service: 
+        Type: AWS::ECS::Service
+        Properties: 
+            Cluster: !Ref Cluster
+            DesiredCount: !Ref DesiredCount
+            LaunchType: FARGATE
+            NetworkConfiguration:
+                AwsvpcConfiguration:
+                    SecurityGroups:
+                        - !Ref SecurityGroups
+                    Subnets:
+                        - !Ref Subnet1
+                        - !Ref Subnet2
+            ServiceRegistries:
+              - RegistryArn: !GetAtt ServiceDiscoveryService.Arn
+            TaskDefinition: !Ref TaskDefinition
+
+    ServiceDiscoveryService:
+        Type: AWS::ServiceDiscovery::Service
+        Properties:
+            DnsConfig:
+                DnsRecords:
+                  - Type: A
+                    TTL: 10
+                NamespaceId: !Ref PrivateDnsNamespace
+            HealthCheckCustomConfig:
+                FailureThreshold: 1
+            Name: !Ref ServiceName
+
+    TaskDefinition:
+        Type: AWS::ECS::TaskDefinition
+        Properties:
+            ContainerDefinitions:
+                - Name: !Join [ "", [ "flask-", !Ref ServiceName ] ]
+                  Image: 078791716679.dkr.ecr.eu-west-1.amazonaws.com/flask-worker:latest
+                  PortMappings:
+                    - ContainerPort: 80
+                  LogConfiguration:
+                    LogDriver: awslogs
+                    Options:
+                        awslogs-group: !Ref AWS::StackName
+                        awslogs-region: !Ref AWS::Region
+                        awslogs-stream-prefix: "ecs"
+            Cpu: 512
+            ExecutionRoleArn: !Ref ExecutionRole
+            Family: !Join [ "", [ "flask-", !Ref ServiceName ] ]
+            NetworkMode: awsvpc
+            Memory: 1024
+            RequiresCompatibilities: 
+              - FARGATE
