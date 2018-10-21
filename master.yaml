@@ -191,4 +191,4 @@ Outputs:
 
     DemoServiceUrl: 
         Description: The URL endpoint for the demo service
-        Value: !Join [ "/", [ !GetAtt ALB.Outputs.LoadBalancerUrl, "/" ]]
+        Value: !Join [ "", [ "http://", !GetAtt ALB.Outputs.LoadBalancerUrl, "/" ]]

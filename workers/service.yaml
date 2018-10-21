@@ -85,7 +85,7 @@ Resources:
         Properties:
             ContainerDefinitions:
                 - Name: !Join [ "", [ "flask-", !Ref ServiceName ] ]
-                  Image: 078791716679.dkr.ecr.eu-west-1.amazonaws.com/flask-worker:latest
+                  Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/flask-worker:latest
                   PortMappings:
                     - ContainerPort: 80
                   LogConfiguration:
